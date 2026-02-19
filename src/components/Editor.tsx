@@ -1,0 +1,139 @@
+import React, { useRef, useEffect, useCallback } from 'react';
+import { useEditorStore } from '../stores/editorStore';
+import { useSettingsStore } from '../stores/settingsStore';
+import './Editor.css';
+
+export const Editor: React.FC = () => {
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const {
+        tabs,
+        activeTabId,
+        updateContent,
+        updateCursor,
+        updateScrollTop,
+        pushUndo,
+    } = useEditorStore();
+    const { wordWrap, zoom, fontFamily, fontSize } = useSettingsStore();
+
+    const activeTab = tabs.find((t) => t.id === activeTabId);
+
+    const updateCursorPosition = useCallback(() => {
+        const textarea = textareaRef.current;
+        if (!textarea || !activeTab) return;
+
+        const value = textarea.value;
+        const selStart = textarea.selectionStart;
+        const textBefore = value.substring(0, selStart);
+        const lines = textBefore.split('\n');
+        const line = lines.length;
+        const col = lines[lines.length - 1].length + 1;
+        updateCursor(activeTab.id, line, col);
+    }, [activeTab?.id, updateCursor]);
+
+    // Sync textarea value with store content (for undo/redo and tab switches)
+    useEffect(() => {
+        if (textareaRef.current && activeTab) {
+            // Only update if values differ (to preserve cursor position during typing)
+            if (textareaRef.current.value !== activeTab.content) {
+                const scrollPos = textareaRef.current.scrollTop;
+                textareaRef.current.value = activeTab.content;
+                textareaRef.current.scrollTop = scrollPos;
+            }
+        }
+    }, [activeTab?.content]);
+
+    // Focus and restore scroll on tab switch
+    useEffect(() => {
+        if (textareaRef.current && activeTab) {
+            textareaRef.current.value = activeTab.content;
+            textareaRef.current.scrollTop = activeTab.scrollTop;
+            textareaRef.current.focus();
+            updateCursorPosition();
+        }
+    }, [activeTabId]);
+
+    const handleInput = useCallback(
+        (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            if (!activeTab) return;
+            updateContent(activeTab.id, e.target.value);
+            updateCursorPosition();
+        },
+        [activeTab?.id, updateContent, updateCursorPosition]
+    );
+
+    const handleKeyDown = useCallback(
+        (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+            if (!activeTab) return;
+            // Push undo state before typing starts (on keydown that modifies content)
+            if (
+                !e.metaKey &&
+                !e.ctrlKey &&
+                e.key.length === 1
+            ) {
+                pushUndo(activeTab.id, activeTab.content);
+            }
+            // Also push undo for backspace/delete
+            if (e.key === 'Backspace' || e.key === 'Delete') {
+                pushUndo(activeTab.id, activeTab.content);
+            }
+            // Handle Tab key for indentation
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                pushUndo(activeTab.id, activeTab.content);
+                const textarea = textareaRef.current;
+                if (!textarea) return;
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const value = textarea.value;
+                const newValue = value.substring(0, start) + '\t' + value.substring(end);
+                textarea.value = newValue;
+                textarea.selectionStart = textarea.selectionEnd = start + 1;
+                updateContent(activeTab.id, newValue);
+            }
+        },
+        [activeTab?.id, activeTab?.content, pushUndo, updateContent]
+    );
+
+    const handleScroll = useCallback(() => {
+        if (textareaRef.current && activeTab) {
+            updateScrollTop(activeTab.id, textareaRef.current.scrollTop);
+        }
+    }, [activeTab?.id, updateScrollTop]);
+
+    const handleClick = useCallback(() => {
+        updateCursorPosition();
+    }, [updateCursorPosition]);
+
+    const handleKeyUp = useCallback(() => {
+        updateCursorPosition();
+    }, [updateCursorPosition]);
+
+    if (!activeTab) {
+        return <div className="editor-empty">No tabs open</div>;
+    }
+
+    const scaledFontSize = (fontSize * zoom) / 100;
+
+    return (
+        <div className="editor-container">
+            <textarea
+                ref={textareaRef}
+                className="editor-textarea"
+                defaultValue={activeTab.content}
+                onChange={handleInput}
+                onKeyDown={handleKeyDown}
+                onKeyUp={handleKeyUp}
+                onClick={handleClick}
+                onScroll={handleScroll}
+                spellCheck={false}
+                style={{
+                    fontFamily,
+                    fontSize: `${scaledFontSize}px`,
+                    whiteSpace: wordWrap ? 'pre-wrap' : 'pre',
+                    overflowWrap: wordWrap ? 'break-word' : 'normal',
+                    wordBreak: wordWrap ? 'break-all' : 'normal',
+                }}
+            />
+        </div>
+    );
+};

@@ -1,0 +1,152 @@
+.find-replace-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 14px;
+    background: var(--bg-find);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-bottom: 1px solid var(--glass-border-subtle);
+    animation: slideDown 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.find-row,
+.replace-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.find-input-group {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: var(--bg-input);
+    border: 1px solid var(--border-input);
+    border-radius: 8px;
+    overflow: hidden;
+    height: 30px;
+    box-shadow: var(--glass-inner-shadow);
+    transition: border-color 0.15s ease;
+}
+
+.find-input-group:focus-within {
+    border-color: var(--accent-color);
+    box-shadow: var(--glass-inner-shadow), 0 0 0 3px var(--accent-glow);
+}
+
+.find-input {
+    flex: 1;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: none;
+    color: var(--text-primary);
+    font-size: 12.5px;
+    padding: 0 10px;
+    font-weight: 400;
+}
+
+.find-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.match-count {
+    padding: 0 10px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    font-weight: 400;
+}
+
+.find-actions {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.find-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid transparent;
+    background: none;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 7px;
+    transition: all 0.15s ease;
+}
+
+.find-toggle:hover {
+    background: var(--bg-hover);
+}
+
+.find-toggle.active {
+    background: var(--accent-color);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.find-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    height: 30px;
+    padding: 0 8px;
+    border: none;
+    background: none;
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 7px;
+    transition: all 0.15s ease;
+}
+
+.find-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.replace-btn {
+    font-size: 11.5px;
+    padding: 0 10px;
+    font-weight: 450;
+}
+
+.find-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: none;
+    color: var(--text-secondary);
+    font-size: 17px;
+    cursor: pointer;
+    border-radius: 7px;
+    transition: all 0.15s ease;
+}
+
+.find-close:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}

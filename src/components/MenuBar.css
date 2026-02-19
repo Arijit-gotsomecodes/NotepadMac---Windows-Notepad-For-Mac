@@ -1,0 +1,121 @@
+.menu-bar {
+    display: flex;
+    align-items: center;
+    background: var(--bg-menu);
+    height: 32px;
+    min-height: 32px;
+    padding: 0 6px;
+    user-select: none;
+}
+
+.menu-container {
+    position: relative;
+}
+
+.menu-trigger {
+    display: flex;
+    align-items: center;
+    height: 26px;
+    padding: 0 10px;
+    border: none;
+    background: none;
+    color: var(--text-primary);
+    font-size: 12.5px;
+    font-weight: 450;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    letter-spacing: -0.01em;
+}
+
+.menu-trigger:hover,
+.menu-trigger.active {
+    background: var(--bg-hover);
+}
+
+.menu-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 220px;
+    background: var(--bg-dropdown);
+    border: 1px solid var(--border-dropdown);
+    border-radius: 10px;
+    box-shadow: var(--glass-shadow-elevated);
+    padding: 4px;
+    z-index: 1000;
+    animation: menuAppear 0.15s cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes menuAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.96) translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    height: 32px;
+    padding: 0 10px;
+    border: none;
+    background: none;
+    color: var(--text-primary);
+    font-size: 12.5px;
+    font-weight: 400;
+    cursor: pointer;
+    border-radius: 6px;
+    text-align: left;
+    transition: all 0.12s ease;
+}
+
+.menu-item:hover {
+    background: var(--bg-menu-hover);
+}
+
+.menu-item-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.menu-item:hover .menu-item-icon {
+    color: var(--text-primary);
+}
+
+.menu-item-label {
+    flex: 1;
+}
+
+.menu-item-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-color);
+    margin-left: auto;
+}
+
+.menu-item-shortcut {
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 400;
+    margin-left: auto;
+    letter-spacing: 0.02em;
+}
+
+.menu-divider {
+    height: 1px;
+    margin: 4px 10px;
+    background: var(--border-color);
+}

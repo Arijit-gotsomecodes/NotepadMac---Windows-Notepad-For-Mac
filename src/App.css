@@ -1,0 +1,182 @@
+/* ===================================
+   Liquid Glass Design System
+   =================================== */
+
+:root {
+  /* Light theme - Clean Windows 11 style */
+  --bg-app: #f3f3f3;
+  --bg-solid: #f3f3f3;
+
+  /* Glass surfaces */
+  --glass-bg: #ffffff;
+  --glass-bg-strong: #ffffff;
+  --glass-bg-subtle: #fafafa;
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-border-subtle: rgba(0, 0, 0, 0.05);
+  --glass-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --glass-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  /* Editor */
+  --bg-editor: #ffffff;
+
+  /* Tab bar */
+  --bg-tab-bar: #f3f3f3;
+  --bg-tab: transparent;
+  --bg-tab-hover: rgba(0, 0, 0, 0.04);
+  --bg-tab-active: #ffffff;
+
+  /* Menu - same as active tab */
+  --bg-menu: #ffffff;
+  --bg-menu-hover: rgba(0, 0, 0, 0.06);
+  --bg-dropdown: #ffffff;
+  --border-dropdown: rgba(0, 0, 0, 0.1);
+
+  /* Status */
+  --bg-status: #f3f3f3;
+
+  /* Find */
+  --bg-find: #ffffff;
+
+  /* Inputs */
+  --bg-input: #ffffff;
+  --border-input: rgba(0, 0, 0, 0.1);
+
+  /* General */
+  --bg-hover: rgba(0, 0, 0, 0.04);
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --border-color: rgba(0, 0, 0, 0.08);
+  --accent-color: #0078d4;
+  --accent-glow: rgba(0, 120, 212, 0.15);
+  --selection-bg: rgba(0, 120, 212, 0.2);
+  --selection-text: inherit;
+  --scrollbar-thumb: rgba(0, 0, 0, 0.2);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.35);
+
+  --glass-inner-shadow: none;
+}
+
+[data-theme='dark'] {
+  --bg-app: #282830;
+  --bg-solid: #282830;
+
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-bg-strong: rgba(255, 255, 255, 0.1);
+  --glass-bg-subtle: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-border-subtle: rgba(255, 255, 255, 0.06);
+  --glass-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --glass-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.4);
+
+  --bg-editor: #1e1e24;
+
+  --bg-tab-bar: #282830;
+  --bg-tab: transparent;
+  --bg-tab-hover: rgba(255, 255, 255, 0.06);
+  --bg-tab-active: #1e1e24;
+
+  /* Menu - same as active tab/editor */
+  --bg-menu: #1e1e24;
+  --bg-menu-hover: rgba(255, 255, 255, 0.08);
+  --bg-dropdown: #2a2a32;
+  --border-dropdown: rgba(255, 255, 255, 0.1);
+
+  --bg-status: #282830;
+  --bg-find: #2a2a32;
+
+  --bg-input: rgba(255, 255, 255, 0.08);
+  --border-input: rgba(255, 255, 255, 0.1);
+
+  --bg-hover: rgba(255, 255, 255, 0.06);
+  --text-primary: rgba(255, 255, 255, 0.92);
+  --text-secondary: rgba(255, 255, 255, 0.5);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --accent-color: #60cdff;
+  --accent-glow: rgba(96, 205, 255, 0.15);
+  --selection-bg: rgba(96, 205, 255, 0.25);
+  --selection-text: inherit;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.15);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.25);
+
+  --glass-inner-shadow: none;
+}
+
+/* ========== Global Reset ========== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--bg-app);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========== App Layout ========== */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* ========== Scrollbar ========== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 100px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  background-clip: content-box;
+}
+
+/* ========== Remove ALL blue outlines ========== */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: none;
+}
+
+textarea:focus,
+input:focus,
+button:focus {
+  outline: none;
+}
+
+/* ========== Button Reset ========== */
+button {
+  font-family: inherit;
+  outline: none;
+  border: none;
+}
