@@ -2,7 +2,7 @@
 
 A modern, fast, and lightweight Notepad for macOS, built with Tauri, React, and TypeScript.
 
-[![Download for macOS](https://img.shields.io/badge/Download-macOS-blue?style=for-the-badge&logo=apple)](https://github.com/Arijit-gotsomecodes/NotepadMac---Windows-Notepad-For-Mac/releases/download/app-v0.1.0/NotepadMac_0.1.0_MAC.dmg)
+[![Download for macOS](https://img.shields.io/badge/Download-macOS-blue?style=for-the-badge&logo=apple)](https://github.com/Arijit-gotsomecodes/NotepadMac---Windows-Notepad-For-Mac/releases/download/app-v1.0.1/NotepadMac_1.0.1.dmg)
 
 ## Features
 

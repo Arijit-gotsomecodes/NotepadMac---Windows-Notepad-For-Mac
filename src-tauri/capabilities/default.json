@@ -11,6 +11,7 @@
     "dialog:default",
     "fs:default",
     "store:default",
+    "window-state:default",
     {
       "identifier": "fs:allow-read-text-file",
       "allow": [
