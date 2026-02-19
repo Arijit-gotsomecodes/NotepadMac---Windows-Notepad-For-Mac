@@ -14,11 +14,14 @@ jobs:
             matrix:
                 include:
                     - platform: macos-latest
-                      args: "--target aarch64-apple-darwin"
-                    - platform: macos-13
-                      args: "--target x86_64-apple-darwin"
+                      target: aarch64-apple-darwin
+                      label: macOS-arm64
+                    - platform: macos-latest
+                      target: x86_64-apple-darwin
+                      label: macOS-x64
 
         runs-on: ${{ matrix.platform }}
+        name: Build (${{ matrix.label }})
 
         steps:
             - name: Checkout repository
@@ -28,11 +31,12 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: "lts/*"
+                  cache: "npm"
 
             - name: Install Rust stable
               uses: dtolnay/rust-toolchain@stable
               with:
-                  targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin' || 'x86_64-apple-darwin' }}
+                  targets: ${{ matrix.target }}
 
             - name: Rust cache
               uses: swatinem/rust-cache@v2
@@ -49,7 +53,10 @@ jobs:
               with:
                   tagName: app-v__VERSION__
                   releaseName: "App v__VERSION__"
-                  releaseBody: "See the assets to download this version and install."
+                  releaseBody: |
+                      Download the installer for your platform:
+                      - **macOS (Apple Silicon)**: `.dmg` file (aarch64)
+                      - **macOS (Intel)**: `.dmg` file (x86_64)
                   releaseDraft: true
                   prerelease: false
-                  args: ${{ matrix.args }}
+                  args: --target ${{ matrix.target }}
