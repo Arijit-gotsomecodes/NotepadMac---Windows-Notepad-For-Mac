@@ -32,7 +32,7 @@ This template should help get you started developing with Tauri, React and Types
 
 #### Install via Homebrew
 ```bash
-brew tap Arijit-gotsomecodes/NotepadMac---Windows-Notepad-For-Mac
+brew tap Arijit-gotsomecodes/NotepadMac---Windows-Notepad-For-Mac https://github.com/Arijit-gotsomecodes/NotepadMac---Windows-Notepad-For-Mac.git
 brew install notepadformac
 ```
 
