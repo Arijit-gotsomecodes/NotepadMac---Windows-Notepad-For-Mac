@@ -2,7 +2,8 @@
 
 A modern, fast, and lightweight Notepad for macOS, built with Tauri, React, and TypeScript.
 
-[![Download for macOS](https://img.shields.io/badge/Download-macOS-blue?style=for-the-badge&logo=apple)](https://github.com/Arijit-gotsomecodes/NotepadMac---Windows-Notepad-For-Mac/releases/download/app-v1.0.1/NotepadMac_1.0.1.dmg)
+[![Download for macOS (Apple Silicon)](https://img.shields.io/badge/Download-Apple_Silicon-blue?style=for-the-badge&logo=apple)](https://github.com/Arijit-gotsomecodes/NotepadMac---Windows-Notepad-For-Mac/releases/download/app-v1.0.1/NotepadMac_1.0.1_aarch64.dmg)
+[![Download for macOS (Intel)](https://img.shields.io/badge/Download-Intel-blue?style=for-the-badge&logo=apple)](https://github.com/Arijit-gotsomecodes/NotepadMac---Windows-Notepad-For-Mac/releases/download/app-v1.0.1/NotepadMac_1.0.1.dmg)
 
 ## Features
 
@@ -37,6 +38,19 @@ npm run tauri dev
 ```bash
 npm run tauri build
 ```
+
+### Troubleshooting
+
+#### "App is damaged and can't be opened" (Apple Silicon)
+
+If you are using an Apple Silicon Mac (M1/M2/M3) and receive a "damaged app" error when trying to open the `.dmg` or `.app`, this is due to macOS Gatekeeper's strict quarantine policies for unsigned ARM64 applications downloaded from the internet. The Intel (x86_64) build often works via Rosetta 2 because its restrictions are slightly looser.
+
+To fix this, you must remove the quarantine flag. Open your Terminal and run the following command against the extracted application:
+
+```bash
+xattr -cr /Applications/NotepadMac.app
+```
+*(Adjust the file path if you placed the app somewhere other than the Applications folder.)*
 
 ## 🤝 Contributing
 
