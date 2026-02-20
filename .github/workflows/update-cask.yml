@@ -1,0 +1,85 @@
+name: Update Homebrew Cask
+
+on:
+    release:
+        types: [published]
+
+jobs:
+    update-cask:
+        runs-on: macos-latest
+        permissions:
+            contents: write
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "lts/*"
+
+            - name: Get Release Data
+              id: release_data
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const release = context.payload.release;
+                      const version = release.tag_name.replace('app-v', '');
+
+                      // Find the assets
+                      const intelAsset = release.assets.find(a => a.name === `NotepadMac_${version}.dmg`);
+                      const armAsset = release.assets.find(a => a.name === `NotepadMac_${version}_aarch64.dmg`);
+
+                      if (!intelAsset || !armAsset) {
+                        core.setFailed('Could not find both Intel and ARM dmg assets in the release.');
+                        return;
+                      }
+
+                      core.setOutput('version', version);
+                      core.setOutput('intel_url', intelAsset.browser_download_url);
+                      core.setOutput('arm_url', armAsset.browser_download_url);
+
+            - name: Download binaries and calculate SHA256
+              id: shasum
+              run: |
+                  curl -L -o intel.dmg "${{ steps.release_data.outputs.intel_url }}"
+                  curl -L -o arm.dmg "${{ steps.release_data.outputs.arm_url }}"
+
+                  INTEL_SHA=$(shasum -a 256 intel.dmg | awk '{print $1}')
+                  ARM_SHA=$(shasum -a 256 arm.dmg | awk '{print $1}')
+
+                  echo "intel_sha=$INTEL_SHA" >> $GITHUB_OUTPUT
+                  echo "arm_sha=$ARM_SHA" >> $GITHUB_OUTPUT
+
+            - name: Update Cask Formula
+              run: |
+                  CASK_FILE="Casks/notepadformac.rb"
+                  VERSION="${{ steps.release_data.outputs.version }}"
+                  INTEL_SHA="${{ steps.shasum.outputs.intel_sha }}"
+                  ARM_SHA="${{ steps.shasum.outputs.arm_sha }}"
+
+                  # Update version
+                  sed -i '' "s/version \".*\"/version \"$VERSION\"/g" $CASK_FILE
+
+                  # Update Intel SHA
+                  # We use awk to replace the first occurrence of sha256 (in the on_intel block)
+                  awk -v sha="$INTEL_SHA" '/sha256/ && ++c==1 {sub(/sha256 ".*"/, "sha256 \"" sha "\"")} 1' $CASK_FILE > tmp_cask && mv tmp_cask $CASK_FILE
+
+                  # Update ARM SHA
+                  # We use awk to replace the second occurrence of sha256 (in the on_arm block)
+                  awk -v sha="$ARM_SHA" '/sha256/ && ++c==2 {sub(/sha256 ".*"/, "sha256 \"" sha "\"")} 1' $CASK_FILE > tmp_cask && mv tmp_cask $CASK_FILE
+
+                  echo "Updated Cask with new version $VERSION and SHAs:"
+                  cat $CASK_FILE
+
+            - name: Commit and Push Changes
+              run: |
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+                  git add Casks/notepadformac.rb
+                  git commit -m "chore(brew): update notepadformac cask to v${{ steps.release_data.outputs.version }}"
+                  git push
