@@ -42,8 +42,12 @@ try {
     // 4. Update README.md download links
     const readmePath = path.join(rootDir, 'README.md');
     let readme = fs.readFileSync(readmePath, 'utf-8');
-    readme = readme.replace(/(download\/app-v)[^\/]+(\/NotepadMac_)[^\.]+(\.dmg)/g, `$1${version}$2${version}$3`);
-    readme = readme.replace(/(download\/app-v)[^\/]+(\/NotepadMac_)[^_]+(_aarch64\.dmg)/g, `$1${version}$2${version}$3`);
+    // Handle replacing older .dmg with _x64.dmg or updating existing _x64.dmg
+    readme = readme.replace(/(download\/app-v)[^\/]+(\/NotepadMac_)[a-zA-Z0-9\.-]+(\.dmg)/g, (match, p1, p2, p3) => {
+        if (match.includes('_aarch64')) return `${p1}${version}${p2}${version}_aarch64${p3}`;
+        if (match.includes('_x64')) return `${p1}${version}${p2}${version}_x64${p3}`;
+        return `${p1}${version}${p2}${version}_x64${p3}`; // fallback convert old .dmg to _x64.dmg
+    });
     fs.writeFileSync(readmePath, readme);
     console.log('✅ Updated README.md');
 
