@@ -2,8 +2,8 @@
 
 A modern, fast, and lightweight Notepad for macOS, built with Tauri, React, and TypeScript.
 
-[![Download for macOS (Apple Silicon)](https://github.com/Arijit-gotsomecodes/NotepadMac---Windows-Notepad-For-Mac/releases/download/app-v1.0.2/NotepadMac_1.0.2_aarch64.dmg)
-[![Download for macOS (Intel)](https://github.com/Arijit-gotsomecodes/NotepadMac---Windows-Notepad-For-Mac/releases/download/app-v1.0.1/NotepadMac_1.0.1_x64.dmg)
+[![Download for macOS (Apple Silicon)](https://img.shields.io/badge/Download-Apple_Silicon-blue?style=for-the-badge&logo=apple)](https://github.com/Arijit-gotsomecodes/NotepadMac---Windows-Notepad-For-Mac/releases/download/app-v1.0.3/NotepadMac_1.0.3_aarch64.dmg)
+[![Download for macOS (Intel)](https://img.shields.io/badge/Download-Intel-blue?style=for-the-badge&logo=apple)](https://github.com/Arijit-gotsomecodes/NotepadMac---Windows-Notepad-For-Mac/releases/download/app-v1.0.3/NotepadMac_1.0.3_x64.dmg)
 
 [Notice] Some apple silion laptop might face issue while first opeaning the app see Troubleshooting Section for fix
 
