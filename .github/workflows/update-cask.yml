@@ -80,6 +80,7 @@ jobs:
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+                  git checkout main || git checkout -b main
                   git add Casks/notepadformac.rb
                   git commit -m "chore(brew): update notepadformac cask to v${{ steps.release_data.outputs.version }}"
-                  git push
+                  git push origin main
