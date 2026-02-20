@@ -48,7 +48,7 @@ try {
     console.log('✅ Updated README.md');
 
     // 5. Commit and tag
-    execSync('git add package.json src-tauri/tauri.conf.json src-tauri/Cargo.toml README.md', { cwd: rootDir, stdio: 'inherit' });
+    execSync('git add package.json src-tauri/tauri.conf.json src-tauri/Cargo.toml README.md scripts/release.js', { cwd: rootDir, stdio: 'inherit' });
     execSync(`git commit -m "chore(release): v${version}"`, { cwd: rootDir, stdio: 'inherit' });
     execSync(`git tag app-v${version}`, { cwd: rootDir, stdio: 'inherit' });
 
