@@ -30,7 +30,7 @@ jobs:
                       const version = release.tag_name.replace('app-v', '');
 
                       // Find the assets
-                      const intelAsset = release.assets.find(a => a.name === `NotepadMac_${version}.dmg`);
+                      const intelAsset = release.assets.find(a => a.name === `NotepadMac_${version}_x64.dmg` || a.name === `NotepadMac_${version}.dmg`);
                       const armAsset = release.assets.find(a => a.name === `NotepadMac_${version}_aarch64.dmg`);
 
                       if (!intelAsset || !armAsset) {
