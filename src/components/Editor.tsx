@@ -131,7 +131,7 @@ export const Editor: React.FC = () => {
                     fontSize: `${scaledFontSize}px`,
                     whiteSpace: wordWrap ? 'pre-wrap' : 'pre',
                     overflowWrap: wordWrap ? 'break-word' : 'normal',
-                    wordBreak: wordWrap ? 'break-all' : 'normal',
+                    wordBreak: 'normal',
                 }}
             />
         </div>
