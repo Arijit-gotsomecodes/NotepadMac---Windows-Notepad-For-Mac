@@ -5,6 +5,7 @@ on:
       - main
     paths-ignore:
       - "README.md"
+      - "Casks/**"
   workflow_dispatch:
 
 jobs:
