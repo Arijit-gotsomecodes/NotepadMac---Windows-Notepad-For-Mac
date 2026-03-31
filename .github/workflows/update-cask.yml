@@ -84,11 +84,16 @@ jobs:
 
                   # Work on top of the latest remote main
                   git fetch origin main
+                  if ! git rebase origin/main; then
+                    echo "Rebase onto origin/main failed (likely due to a concurrent push). No changes were pushed; rerun this workflow after main is updated or resolve the conflict manually. Steps: 1) inspect this workflow's logs for conflict details, 2) pull main locally, 3) update the cask file, 4) push the changes."
+                    git rebase --abort
+                    exit 1
+                  fi
                   git add Casks/notepadformac.rb
                   git commit -m "chore(brew): update notepadformac cask to v${{ steps.release_data.outputs.version }}"
-                  # Rebase the new commit onto the freshly fetched main tip
-                  if ! git rebase origin/main; then
-                    echo "Rebase onto origin/main failed (likely due to a concurrent push). No changes were pushed; rerun this workflow after main is updated or resolve the conflict manually."
+                  # Ensure the new commit is rebased onto any freshly fetched changes
+                  if ! git pull --rebase origin main; then
+                    echo "Rebase onto origin/main failed after committing (likely due to a concurrent push). No changes were pushed; rerun this workflow after main is updated or resolve the conflict manually. Steps: 1) inspect this workflow's logs for conflict details, 2) pull main locally, 3) update the cask file, 4) push the changes."
                     git rebase --abort
                     exit 1
                   fi
