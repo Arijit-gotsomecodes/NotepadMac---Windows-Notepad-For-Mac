@@ -84,11 +84,11 @@ jobs:
 
                   # Ensure we are up to date with the remote main branch before committing
                   git fetch origin
+                  git add Casks/notepadformac.rb
+                  git commit -m "chore(brew): update notepadformac cask to v${{ steps.release_data.outputs.version }}"
                   if ! git rebase origin/main; then
                     echo "Rebase onto origin/main failed; aborting update to avoid corrupting the cask history."
                     git rebase --abort
                     exit 1
                   fi
-                  git add Casks/notepadformac.rb
-                  git commit -m "chore(brew): update notepadformac cask to v${{ steps.release_data.outputs.version }}"
                   git push origin main
