@@ -18,6 +18,11 @@ jobs:
                   # Work directly on the latest main branch so pushes are fast-forward
                   ref: main
 
+            - name: Prepare main branch
+              run: |
+                  git fetch origin main
+                  git checkout -B main origin/main
+
             - name: Setup Node.js
               uses: actions/setup-node@v5
               with:
