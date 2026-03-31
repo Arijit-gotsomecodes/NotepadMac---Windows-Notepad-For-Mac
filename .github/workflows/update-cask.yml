@@ -82,8 +82,6 @@ jobs:
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-                  # Work on top of the latest remote main
-                  git fetch origin main
                   git add Casks/notepadformac.rb
                   git commit -m "chore(brew): update notepadformac cask to v${{ steps.release_data.outputs.version }}"
                   # Ensure the new commit is rebased onto any freshly fetched changes
