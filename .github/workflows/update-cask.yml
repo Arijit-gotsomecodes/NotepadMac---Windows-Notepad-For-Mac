@@ -3,6 +3,12 @@ name: Update Homebrew Cask
 on:
     release:
         types: [published]
+    workflow_dispatch:
+        inputs:
+            tag:
+                description: "Release tag to update (e.g., app-v1.0.4). Leave blank to use the latest release."
+                required: false
+                type: string
 
 jobs:
     update-cask:
@@ -17,6 +23,7 @@ jobs:
                   fetch-depth: 0
                   # Work directly on the latest main branch so pushes are fast-forward
                   ref: main
+                  clean: true
 
             - name: Prepare main branch
               run: |
@@ -33,15 +40,42 @@ jobs:
               uses: actions/github-script@v7
               with:
                   script: |
-                      const release = context.payload.release;
-                      const version = release.tag_name.replace('app-v', '');
+                      const inputTag = core.getInput('tag');
+                      let release = null;
 
-                      // Find the assets
-                      const intelAsset = release.assets.find(a => a.name === `NotepadMac_${version}_x64.dmg` || a.name === `NotepadMac_${version}.dmg`);
-                      const armAsset = release.assets.find(a => a.name === `NotepadMac_${version}_aarch64.dmg`);
+                      if (context.eventName === 'release') {
+                        release = context.payload.release;
+                      } else {
+                        const tag = inputTag?.trim();
+                        if (tag) {
+                          release = (await github.rest.repos.getReleaseByTag({
+                            owner: context.repo.owner,
+                            repo: context.repo.repo,
+                            tag,
+                          })).data;
+                        } else {
+                          release = (await github.rest.repos.getLatestRelease({
+                            owner: context.repo.owner,
+                            repo: context.repo.repo,
+                          })).data;
+                        }
+                      }
+
+                      if (!release) {
+                        core.setFailed('Could not resolve a release to update.');
+                        return;
+                      }
+
+                      const version = release.tag_name.replace(/^app-v/, '');
+                      const intelAsset = release.assets.find(
+                        (a) => a.name === `NotepadMac_${version}_x64.dmg` || a.name === `NotepadMac_${version}.dmg`
+                      );
+                      const armAsset = release.assets.find(
+                        (a) => a.name === `NotepadMac_${version}_aarch64.dmg`
+                      );
 
                       if (!intelAsset || !armAsset) {
-                        core.setFailed('Could not find both Intel and ARM dmg assets in the release.');
+                        core.setFailed(`Could not find both Intel and ARM dmg assets in release ${release.tag_name}.`);
                         return;
                       }
 
@@ -87,9 +121,17 @@ jobs:
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-                  git add Casks/notepadformac.rb
-                  git commit -m "chore(brew): update notepadformac cask to v${{ steps.release_data.outputs.version }}"
-                  # Ensure the new commit is rebased onto any freshly fetched changes
+                  # Stash local changes before switching branches
+                  git stash
+
+                  # Safely check out main (fetch first to ensure it exists remotely)
+                  git fetch origin main
+                  git checkout main
+
+                  # Reapply the stashed cask changes
+                  git stash pop
+
+                  # Pull latest remote changes and rebase to avoid non-fast-forward
                   if ! git pull --rebase origin main; then
                     printf '%s\n' \
                       "Rebase onto origin/main failed (likely due to a concurrent push)." \
@@ -102,4 +144,7 @@ jobs:
                     git rebase --abort
                     exit 1
                   fi
+
+                  git add Casks/notepadformac.rb
+                  git commit -m "chore(brew): update notepadformac cask to v${{ steps.release_data.outputs.version }}"
                   git push origin main
