@@ -83,9 +83,10 @@ jobs:
                   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
                   # Ensure we are up to date with the remote main branch before committing
-                  git fetch origin
+                  git fetch origin main
                   git add Casks/notepadformac.rb
                   git commit -m "chore(brew): update notepadformac cask to v${{ steps.release_data.outputs.version }}"
+                  # Rebase the new commit onto the freshly fetched main tip
                   if ! git rebase origin/main; then
                     echo "Rebase onto origin/main failed; aborting update to avoid corrupting the cask history."
                     git rebase --abort
