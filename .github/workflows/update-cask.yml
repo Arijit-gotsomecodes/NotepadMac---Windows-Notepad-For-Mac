@@ -53,8 +53,14 @@ jobs:
                   INTEL_SHA=$(shasum -a 256 intel.dmg | awk '{print $1}')
                   ARM_SHA=$(shasum -a 256 arm.dmg | awk '{print $1}')
 
-                  echo "intel_sha=$INTEL_SHA" >> $GITHUB_OUTPUT
-                  echo "arm_sha=$ARM_SHA" >> $GITHUB_OUTPUT
+                   echo "intel_sha=$INTEL_SHA" >> $GITHUB_OUTPUT
+                   echo "arm_sha=$ARM_SHA" >> $GITHUB_OUTPUT
+
+            - name: Sync with remote main
+              run: |
+                  git fetch origin main
+                  git checkout main
+                  git reset --hard origin/main
 
             - name: Update Cask Formula
               run: |
@@ -82,11 +88,10 @@ jobs:
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-                  # Ensure we are up to date with the remote main branch before committing
-                  git fetch origin main
                   git add Casks/notepadformac.rb
                   git commit -m "chore(brew): update notepadformac cask to v${{ steps.release_data.outputs.version }}"
                   # Rebase the new commit onto the freshly fetched main tip
+                  git fetch origin main
                   if ! git rebase origin/main; then
                     echo "Rebase onto origin/main failed; aborting update to avoid corrupting the cask history."
                     git rebase --abort
