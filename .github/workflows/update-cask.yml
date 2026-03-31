@@ -86,7 +86,15 @@ jobs:
                   git fetch origin main
                   git add Casks/notepadformac.rb
                   git commit -m "chore(brew): update notepadformac cask to v${{ steps.release_data.outputs.version }}"
-                  REBASE_FAIL_MSG="Rebase onto origin/main failed (likely due to a concurrent push). No changes were pushed; rerun this workflow after main is updated or resolve the conflict manually. Steps: 1) inspect this workflow's logs for conflict details, 2) pull main locally, 3) update the cask file, 4) push the changes."
+                  REBASE_FAIL_MSG=$(cat <<'EOF'
+Rebase onto origin/main failed (likely due to a concurrent push). No changes were pushed; rerun this workflow after main is updated or resolve the conflict manually.
+Steps:
+  1) Inspect this workflow's logs for conflict details
+  2) Pull main locally
+  3) Update the cask file
+  4) Push the changes
+EOF
+)
                   # Ensure the new commit is rebased onto any freshly fetched changes
                   if ! git pull --rebase origin main; then
                     echo "$REBASE_FAIL_MSG"
