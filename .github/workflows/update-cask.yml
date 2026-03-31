@@ -121,18 +121,8 @@ jobs:
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-                  # Stash local changes before switching branches
-                  git stash
-
-                  # Safely check out main (fetch first to ensure it exists remotely)
-                  git fetch origin main
-                  git checkout main
-
-                  # Reapply the stashed cask changes
-                  git stash pop
-
-                  # Pull latest remote changes and rebase to avoid non-fast-forward
-                  if ! git pull --rebase origin main; then
+                  # Ensure we are up-to-date with main while safely handling local changes
+                  if ! git pull --rebase --autostash origin main; then
                     printf '%s\n' \
                       "Rebase onto origin/main failed (likely due to a concurrent push)." \
                       "No changes were pushed; rerun this workflow after main is updated or resolve the conflict manually." \
