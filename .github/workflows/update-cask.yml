@@ -53,8 +53,8 @@ jobs:
                   INTEL_SHA=$(shasum -a 256 intel.dmg | awk '{print $1}')
                   ARM_SHA=$(shasum -a 256 arm.dmg | awk '{print $1}')
 
-                   echo "intel_sha=$INTEL_SHA" >> $GITHUB_OUTPUT
-                   echo "arm_sha=$ARM_SHA" >> $GITHUB_OUTPUT
+                  echo "intel_sha=$INTEL_SHA" >> $GITHUB_OUTPUT
+                  echo "arm_sha=$ARM_SHA" >> $GITHUB_OUTPUT
 
             - name: Update Cask Formula
               run: |
